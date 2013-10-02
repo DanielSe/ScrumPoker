@@ -9,11 +9,40 @@
     <li>@Html.ActionLink("Show client", "Index", "Client", new { roomId = @Model.RoomId }, new { target = "_blank"})</li>
 </ul>
 
-<h2>Participants</h2>
+@if (Model.Participants.Any())
+{
+    <h2>Participants</h2>
+    <ul>
+        @foreach (var participant in Model.Participants)
+        {
+            <li>
+                <span>@participant.Name</span>
+                <span>@participant.Email</span>
+                @if (string.IsNullOrEmpty(participant.Vote))
+                {
+                    <span>Has not voted yet</span>
+                }
+                else
+                {
+                    <span>@participant.Vote</span>
+                }
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <h2>No participants</h2>
+}
 
-<ul>
-    @foreach (var participant in Model.Participants)
-    {
-        <li>@participant.Name - @participant.Email</li>
-    }
-</ul>
+@if (Model.CurrentIssue != null)
+{
+    <h2>Issue</h2>
+    <p>@Model.CurrentIssue.Name</p>
+    <p>@Model.CurrentIssue.Description</p>
+}
+else
+{
+    <h2>No issue</h2>
+}
+<p>@Html.ActionLink("Set issue", "SetIssue")</p>

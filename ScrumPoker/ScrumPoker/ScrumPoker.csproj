@@ -243,6 +243,7 @@
     <Content Include="Views\Client\Index.cshtml" />
     <Content Include="Views\Client\Join.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Admin\SetIssue.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

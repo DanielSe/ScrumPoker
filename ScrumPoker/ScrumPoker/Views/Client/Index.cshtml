@@ -1,21 +1,32 @@
-﻿@model ScrumPoker.Models.Room
+﻿@model ScrumPoker.Controllers.ClientController.IndexViewModel
 
 @{
     ViewBag.Title = "Index";
 }
 
-<h2>Room @Model.Name</h2>
-<p>@Model.Description</p>
+<h2>Room @Model.Room.Name</h2>
+<p>@Model.Room.Description</p>
 
-<h2>Current Issue: </h2>
-<p>Description</p>
+@if (Model.Room.CurrentIssue != null)
+{
+    <h2>Current Issue: @Model.Room.CurrentIssue.Name</h2>
+    <p>@Model.Room.CurrentIssue.Description</p>
+}
 
 
-
-<h2>Vote</h2>
-<ul>
-    @foreach(var size in @Model.VoteSizes)
-    {
-        <li>@Html.ActionLink(size, "Vote", new { id = @Model.RoomId, vote = size })</li>
-    }
-</ul>
+@if (string.IsNullOrEmpty(Model.Participant.Vote))
+{
+    <h2>Vote</h2>
+    <ul>
+        @foreach (var size in @Model.Room.VoteSizes)
+        {
+            <li>
+                @Html.ActionLink(size, "Vote", new {vote = size})
+            </li>
+        }
+    </ul>
+}
+else
+{
+    <h2>You voted @Model.Participant.Vote</h2>
+}

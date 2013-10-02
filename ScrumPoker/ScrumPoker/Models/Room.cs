@@ -19,6 +19,7 @@ namespace ScrumPoker.Models
         public string Description { get; set; }
         public string[] VoteSizes { get; set; }
 
-        public List<Participant> Participants { get; private set; } 
+        public List<Participant> Participants { get; private set; }
+        public Issue CurrentIssue { get; set; }
     }
 }

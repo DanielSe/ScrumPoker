@@ -1,0 +1,22 @@
+﻿@{
+    ViewBag.Title = "SetIssue";
+}
+
+<h2>SetIssue</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.Label("Name")
+        @Html.TextBox("Name")
+    </div>
+    
+    <div>
+        @Html.Label("Description")
+        @Html.TextArea("Description")
+    </div>
+    
+    <div>
+        <input type="submit" value="Set issue" />
+    </div>
+}
