@@ -1,0 +1,17 @@
+﻿@model ScrumPoker.Models.Room
+
+<h1>Room @Model.Name</h1>
+<p>@Model.Description</p>
+
+<h2>Current Issue: </h2>
+<p>Description</p>
+
+
+
+<h2>Vote</h2>
+<ul>
+    @foreach(var size in @Model.VoteSizes)
+    {
+        <li>@Html.ActionLink(size, "Vote", new { id = @Model.RoomId, vote = size })</li>
+    }
+</ul>

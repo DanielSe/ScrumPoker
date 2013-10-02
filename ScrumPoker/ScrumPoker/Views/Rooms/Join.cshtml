@@ -1,0 +1,18 @@
+﻿@model ScrumPoker.Models.Participant
+
+@{
+    ViewBag.Title = "Join";
+}
+
+<h2>Join room</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.LabelFor(x => x.Name)
+    @Html.TextBoxFor(x => x.Name)
+
+    @Html.LabelFor(x => x.Email)
+    @Html.TextBoxFor(x => x.Email)
+
+    <input type="submit" value="Join" />
+}

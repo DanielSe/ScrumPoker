@@ -1,0 +1,19 @@
+﻿@model ScrumPoker.Models.Room
+
+
+<h1>Admin for @Model.Name</h1>
+<p>@Model.Description</p>
+
+<ul>
+    <li>@Html.ActionLink("Show dashboard", "Dashboard", new { id = @Model.RoomId }, new { target = "_blank"})</li>
+    <li>@Html.ActionLink("Show client", "Index", "Client", new { roomId = @Model.RoomId }, new { target = "_blank"})</li>
+</ul>
+
+<h2>Participants</h2>
+
+<ul>
+    @foreach (var participant in Model.Participants)
+    {
+        <li>@participant.Name - @participant.Email</li>
+    }
+</ul>

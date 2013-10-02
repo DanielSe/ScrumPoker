@@ -1,0 +1,21 @@
+﻿@model ScrumPoker.Models.Room
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Room @Model.Name</h2>
+<p>@Model.Description</p>
+
+<h2>Current Issue: </h2>
+<p>Description</p>
+
+
+
+<h2>Vote</h2>
+<ul>
+    @foreach(var size in @Model.VoteSizes)
+    {
+        <li>@Html.ActionLink(size, "Vote", new { id = @Model.RoomId, vote = size })</li>
+    }
+</ul>

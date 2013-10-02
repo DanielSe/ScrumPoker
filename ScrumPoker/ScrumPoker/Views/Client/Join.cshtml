@@ -1,0 +1,25 @@
+﻿@model ScrumPoker.Models.Room
+
+@{
+    ViewBag.Title = "Join";
+}
+
+<h2>Join Room @Model.Name</h2>
+
+@using (Html.BeginForm())
+{
+    <div>
+        @Html.Label("Name")
+        @Html.TextBox("Name")
+    </div>
+
+    <div>
+        @Html.Label("Email")
+        @Html.TextBox("Email")
+    </div>
+
+    <div>
+        <input type="submit" value="Join" />
+    </div>
+}
+

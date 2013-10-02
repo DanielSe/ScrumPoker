@@ -1,0 +1,25 @@
+﻿@model ScrumPoker.Models.Room
+
+<h1>Create new Room</h1>
+
+@using (var form = Html.BeginForm())
+{
+    <div>
+        @Html.Label("Name")
+        @Html.TextBox("Name")
+    </div>
+    
+    <div>
+        @Html.Label("Description")
+        @Html.TextArea("Description")
+    </div>
+    
+    <div>
+        @Html.Label("VoteSizes")
+        @Html.TextBox("VoteSizes")
+    </div>
+
+    <div>
+        <input type="submit" value="Create" />
+    </div>
+}
