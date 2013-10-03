@@ -234,11 +234,8 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Rooms\Index.cshtml" />
-    <Content Include="Views\Rooms\Client.cshtml" />
-    <Content Include="Views\Rooms\Admin.cshtml" />
     <Content Include="Views\Rooms\Dashboard.cshtml" />
     <Content Include="Views\Rooms\Create.cshtml" />
-    <Content Include="Views\Rooms\Join.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
     <Content Include="Views\Client\Index.cshtml" />
     <Content Include="Views\Client\Join.cshtml" />

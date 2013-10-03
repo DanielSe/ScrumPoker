@@ -2,6 +2,11 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Index</h2>
-
-@Html.ActionLink("Go to rooms", "Index", "Rooms")
+<!-- Main jumbotron for a primary marketing message or call to action -->
+<div class="jumbotron">
+    <div class="container">
+        <h1>Scrum Poker</h1>
+        <p>This is an experimental online collaborative tool for managing Scrum Poker planning meetings.</p>
+        <p>@Html.ActionLink("Go to Rooms", "Index", "Rooms", new {}, new { @class = "btn btn-primary btn-lg"})</p>
+    </div>
+</div>

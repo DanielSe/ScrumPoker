@@ -36,13 +36,13 @@ namespace ScrumPoker.Controllers
         // GET: /Rooms/Create
         public ActionResult Create()
         {
-            return View();
+            return View(new CreateRoomViewModel());
         }
 
         // 
         // POST: /Rooms/Create
         [HttpPost]
-        public ActionResult Create(FormCollection formCollection)
+        public ActionResult Create(CreateRoomViewModel model)
         {
             try
             {
@@ -50,9 +50,10 @@ namespace ScrumPoker.Controllers
                 var rooms = ScrumPokerKernel.Instance.Get<ICrud<Room, string>>();
                 var room = new Room()
                     {
-                        Name = formCollection["Name"],
-                        Description = formCollection["Description"],
-                        VoteSizes = formCollection["VoteSizes"].Split(',').Select(x => x.Trim()).ToArray()
+                        Name = model.Name,
+                        Description = model.Description,
+                        VoteSizes = model.VoteSizes.Split(',').Select(x => x.Trim()).ToArray(),
+                        AdminEmail = model.AdminEmail
                     };
 
                 var theRoom = rooms.Create(room);
@@ -61,7 +62,7 @@ namespace ScrumPoker.Controllers
             }
             catch
             {
-                return View();
+                return View(model);
             }
         }
 
@@ -115,5 +116,14 @@ namespace ScrumPoker.Controllers
         //        return View();
         //    }
         //}
+
+        public class CreateRoomViewModel
+        {
+            public string Name { get; set; }
+            public string Description { get; set; }
+            public string VoteSizes { get; set; }
+
+            public string AdminEmail { get; set; }
+        }
     }
 }
