@@ -1,48 +1,64 @@
 ﻿@model ScrumPoker.Models.Room
 
+<div class="container">
+    <h1>Admin for @Model.Name</h1>
+    <p>@Model.Description</p>
 
-<h1>Admin for @Model.Name</h1>
-<p>@Model.Description</p>
-
-<ul>
-    <li>@Html.ActionLink("Show dashboard", "Dashboard", new { id = @Model.RoomId }, new { target = "_blank"})</li>
-    <li>@Html.ActionLink("Show client", "Index", "Client", new { roomId = @Model.RoomId }, new { target = "_blank"})</li>
-</ul>
-
-@if (Model.Participants.Any())
-{
-    <h2>Participants</h2>
     <ul>
-        @foreach (var participant in Model.Participants)
+        <li>@Html.ActionLink("Show dashboard", "Dashboard", "Client", new { id = @Model.RoomId }, new { target = "_blank"})</li>
+        <li>@Html.ActionLink("Show client", "Index", "Client", new { roomId = @Model.RoomId }, new { target = "_blank"})</li>
+    </ul>
+
+    @if (Model.Participants.Any())
+    {
+        <h2>Participants</h2>
+        <ul>
+            @foreach (var participant in Model.Participants)
+            {
+                <li>
+                    <span>@participant.Name</span>
+                    <span>@participant.Email</span>
+                    @if (string.IsNullOrEmpty(participant.Vote))
+                    {
+                        <span>Has not voted yet</span>
+                    }
+                    else
+                    {
+                        <span>@participant.Vote</span>
+                    }
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <h2>No participants</h2>
+    }
+    
+    <h2>Issues</h2>
+    <ul>
+        @if (Model.Issues.Any())
         {
-            <li>
-                <span>@participant.Name</span>
-                <span>@participant.Email</span>
-                @if (string.IsNullOrEmpty(participant.Vote))
-                {
-                    <span>Has not voted yet</span>
-                }
-                else
-                {
-                    <span>@participant.Vote</span>
-                }
-            </li>
+            foreach (var issue in Model.Issues)
+            {
+                <li>@issue.Name - @issue.Description</li>
+            }
+        }
+        else
+        {
+            <li>No issues</li>
         }
     </ul>
-}
-else
-{
-    <h2>No participants</h2>
-}
-
-@if (Model.CurrentIssue != null)
-{
-    <h2>Issue</h2>
-    <p>@Model.CurrentIssue.Name</p>
-    <p>@Model.CurrentIssue.Description</p>
-}
-else
-{
-    <h2>No issue</h2>
-}
-<p>@Html.ActionLink("Set issue", "SetIssue")</p>
+    @if (Model.CurrentIssue != null)
+    {
+        <p>Current issue: @Model.CurrentIssue.Name @Model.CurrentIssue.Description</p>
+    }
+    else
+    {
+        <p>There is no current issue.</p>
+    }
+    <p>
+        @Html.ActionLink("Set issue", "SetIssue")
+        @Html.ActionLink("Create issue", "CreateIssue")
+    </p>
+</div>

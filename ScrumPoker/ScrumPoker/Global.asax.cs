@@ -1,4 +1,6 @@
 ﻿using Ninject;
+using Ninject.Parameters;
+using ScrumPoker.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,12 +19,38 @@ namespace ScrumPoker
     {
         protected void Application_Start()
         {
+            ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());
             AreaRegistration.RegisterAllAreas();
 
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+        }
+    }
+
+    public class NinjectControllerFactory : DefaultControllerFactory
+    {
+        private static readonly IKernel Kernel;
+
+        static NinjectControllerFactory()
+        {
+            Kernel = new StandardKernel(new ScrumPokerModule());
+        }
+
+        public override IController CreateController(RequestContext requestContext, string controllerName)
+        {
+            try
+            {
+                var t = Type.GetType("ScrumPoker.Controllers." + controllerName + "Controller");
+                var controller = Kernel.Get(t);
+
+                return (IController)controller;
+            }
+            catch (Exception)
+            {
+                return base.CreateController(requestContext, controllerName);
+            }
         }
     }
 }

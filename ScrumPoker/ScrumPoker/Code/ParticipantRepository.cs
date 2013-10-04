@@ -1,34 +1,32 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using ScrumPoker.Models;
 
-namespace ScrumPoker
+namespace ScrumPoker.Code
 {
-    public class RoomRepository : IRoomRepository
+    public class ParticipantRepository : IParticipantRepository
     {
-        public Room Create(Room entity)
+        public Participant Create(Participant entity)
         {
             throw new NotImplementedException();
         }
 
-        public Room Read(string key)
+        public Participant Read(string key)
         {
             throw new NotImplementedException();
         }
 
-        public Room Update(Room entity)
+        public Participant Update(Participant entity)
         {
             throw new NotImplementedException();
         }
 
-        public void Delete(Room entity)
+        public void Delete(Participant entity)
         {
             throw new NotImplementedException();
         }
 
-        public IEnumerable<Room> List()
+        public IEnumerable<Participant> List()
         {
             throw new NotImplementedException();
         }

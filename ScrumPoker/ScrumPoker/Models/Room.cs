@@ -10,7 +10,7 @@ namespace ScrumPoker.Models
         public Room()
         {
             Participants = new List<Participant>();
-            IssueHistory = new List<Issue>();
+            Issues = new List<Issue>();
         }
 
         [DataType(DataType.Text), Display(Name = "Room ID"), HiddenInput(DisplayValue = false)]
@@ -29,7 +29,7 @@ namespace ScrumPoker.Models
 
         public List<Participant> Participants { get; private set; }
         public Issue CurrentIssue { get; set; }
-        public List<Issue> IssueHistory { get; private set; }
+        public List<Issue> Issues { get; private set; }
 
         public string[] VoteSizes { get { return VoteSizeSetting.Split(',').Select(x => x.Trim()).ToArray(); } }
     }

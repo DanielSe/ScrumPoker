@@ -4,33 +4,32 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Ninject;
+using ScrumPoker.Code;
 using ScrumPoker.Models;
 
 namespace ScrumPoker.Controllers
 {
     public class RoomsController : Controller
     {
+        private readonly IRoomRepository _roomRepository;
+
+        public RoomsController(IRoomRepository roomRepository)
+        {
+            _roomRepository = roomRepository;
+        }
+
         // Shows a list of all available rooms or allows searching for rooms.
         // GET: /Rooms/
 
         public ActionResult Index()
         {
-            var roomrepo = ScrumPokerKernel.Instance.Get<IRoomRepository>();
-            var rooms = roomrepo.List();
+            var rooms = _roomRepository.List();
 
             return View(rooms);
         }
 
 
-        // Shows the dashboard from a room, opened through a link on the admin page of the room
-        // GET: /Rooms/Dashboard/57fhanr
-        public ActionResult Dashboard(string id)
-        {
-            var roomrepo = ScrumPokerKernel.Instance.Get<IRoomRepository>();
-            var room = roomrepo.Read(id);
-
-            return View(room);
-        }
+        
 
         // Shows the interface to create a new room
         // GET: /Rooms/Create
@@ -50,8 +49,7 @@ namespace ScrumPoker.Controllers
                     return View(room);
 
                 // TODO: Add insert logic here
-                var rooms = ScrumPokerKernel.Instance.Get<IRoomRepository>();
-                var theRoom = rooms.Create(room);
+                var theRoom = _roomRepository.Create(room);
                 
                 return RedirectToAction("Index", "Admin", new { roomId = theRoom.RoomAdminId });
             }
@@ -111,15 +109,5 @@ namespace ScrumPoker.Controllers
         //        return View();
         //    }
         //}
-
-        public class CreateRoomViewModel
-        {
-            
-            public string Name { get; set; }
-            public string Description { get; set; }
-            public string VoteSizes { get; set; }
-
-            public string AdminEmail { get; set; }
-        }
     }
 }

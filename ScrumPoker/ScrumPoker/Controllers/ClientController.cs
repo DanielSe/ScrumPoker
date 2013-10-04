@@ -1,6 +1,7 @@
 ﻿using System.Web;
 using System.Web.Mvc;
 using Ninject;
+using ScrumPoker.Code;
 using ScrumPoker.Models;
 using System.Linq;
 using System.Linq.Expressions;
@@ -10,8 +11,13 @@ namespace ScrumPoker.Controllers
 {
     public class ClientController : Controller
     {
-        private ICrud<Room, string> _rooms = ScrumPokerKernel.Instance.Get<IRoomRepository>();
+        private readonly IRoomRepository _roomRepository;
         private IIdGenerator<string> _idGenerator = ScrumPokerKernel.Instance.Get<IIdGenerator<string>>();
+
+        public ClientController(IRoomRepository roomRepository)
+        {
+            _roomRepository = roomRepository;
+        }
 
         //
         // GET: /Client/
@@ -22,22 +28,35 @@ namespace ScrumPoker.Controllers
             if (participantCookie == null)
                 return RedirectToAction("Join", new {roomId});
 
-            var room = _rooms.Read(roomId);
+            var room = _roomRepository.Read(roomId);
 
             return View(new IndexViewModel { Room = room, Participant = GetParticipant(roomId) });
         }
 
-        public ActionResult Join(string roomId)
+        // Shows the dashboard from a room, opened through a link on the admin page of the room
+        // GET: /Rooms/Dashboard/57fhanr
+        public ActionResult Dashboard(string id)
         {
-            var room = _rooms.Read(roomId);
+            var room = _roomRepository.Read(id);
 
             return View(room);
         }
 
+        //
+        //
+        public ActionResult Join(string roomId)
+        {
+            var room = _roomRepository.Read(roomId);
+
+            return View(room);
+        }
+
+        //
+        //
         [HttpPost]
         public ActionResult Join(string roomId, FormCollection form)
         {
-            var room = _rooms.Read(roomId);
+            var room = _roomRepository.Read(roomId);
 
             var participant = new Participant
                 {
@@ -53,11 +72,15 @@ namespace ScrumPoker.Controllers
             return RedirectToAction("Index", new { roomId });
         }
 
+        //
+        //
         public ActionResult Leave(string roomId)
         {
             return RedirectToAction("Index", "Rooms");
         }
 
+        //
+        //
         public ActionResult Vote(string roomId, string vote)
         {
             var participant = GetParticipant(roomId);
@@ -84,7 +107,7 @@ namespace ScrumPoker.Controllers
             if (string.IsNullOrEmpty(pid))
                 return null;
 
-            var room = _rooms.Read(roomId);
+            var room = _roomRepository.Read(roomId);
             if (room == null)
                 return null;
 

@@ -1,0 +1,8 @@
+﻿@model ScrumPoker.Models.Issue
+
+<div>
+    @Html.HiddenFor(x => x.IssueId)
+    
+    @Html.EditorFor(x => x.Name, "String")
+    @Html.EditorFor(x => x.Description, "TextArea")
+</div>

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace ScrumPoker.Models
+namespace ScrumPoker.Code
 {
     public interface ICrud<TEntity, in TKey>
         where TEntity : class

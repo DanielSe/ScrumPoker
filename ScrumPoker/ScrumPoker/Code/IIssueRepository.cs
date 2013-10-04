@@ -1,6 +1,6 @@
 ﻿using ScrumPoker.Models;
 
-namespace ScrumPoker
+namespace ScrumPoker.Code
 {
     public interface IIssueRepository : ICrud<Issue,string>
     {
