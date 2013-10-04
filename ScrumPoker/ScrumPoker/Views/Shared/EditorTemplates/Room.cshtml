@@ -1,0 +1,11 @@
+﻿@model ScrumPoker.Models.Room
+
+<div>
+    @Html.HiddenFor(x => x.RoomId)
+    @Html.HiddenFor(x => x.RoomAdminId)
+    
+    @Html.EditorFor(x => x.Name, "String")
+    @Html.EditorFor(x => x.Description, "TextArea")
+    @Html.EditorFor(x => x.AdminEmail, "String")
+    @Html.EditorFor(x => x.VoteSizeSetting, "String")
+</div>

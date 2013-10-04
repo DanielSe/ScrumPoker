@@ -1,29 +1,10 @@
-﻿@model ScrumPoker.Controllers.RoomsController.CreateRoomViewModel
+﻿@model ScrumPoker.Models.Room
 
 <div class="container">
-<h1>Create new Room</h1>
-
+    <h1>Create new Room</h1>
     @using (Html.BeginForm())
     {
-        <div class="form-group">
-            @Html.LabelFor(x => x.Name)
-            @Html.TextBoxFor(x => x.Name)
-        </div>
-    
-        <div class="form-group">
-            @Html.LabelFor(x => x.Description)
-            @Html.TextAreaFor(x => x.Description)
-        </div>
-        
-        <div class="form-group">
-            @Html.LabelFor(x => x.AdminEmail)
-            @Html.TextBoxFor(x => x.AdminEmail)
-        </div>
-    
-        <div class="form-group">
-            @Html.LabelFor(x => x.VoteSizes)
-            @Html.TextBoxFor(x => x.VoteSizes)
-        </div>
+        @Html.EditorForModel()
 
         <div class="form-group">
             <input type="submit" value="Create" class="btn btn-default" />
