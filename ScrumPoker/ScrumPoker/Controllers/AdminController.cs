@@ -14,7 +14,7 @@ namespace ScrumPoker.Controllers
         // GET: /Admin/{roomId}
         public ActionResult Index(string roomId)
         {
-            var roomrepo = ScrumPokerKernel.Instance.Get<ICrud<Room, string>>();
+            var roomrepo = ScrumPokerKernel.Instance.Get<IRoomRepository>();
             var room = roomrepo.List().FirstOrDefault(x => x.RoomAdminId == roomId);
 
             if (room == null)
@@ -32,7 +32,7 @@ namespace ScrumPoker.Controllers
         [HttpPost]
         public ActionResult SetIssue(string roomId, FormCollection form)
         {
-            var roomrepo = ScrumPokerKernel.Instance.Get<ICrud<Room, string>>();
+            var roomrepo = ScrumPokerKernel.Instance.Get<IRoomRepository>();
             var room = roomrepo.List().FirstOrDefault(x => x.RoomAdminId == roomId);
 
             var issue = new Issue()

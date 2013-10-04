@@ -5,7 +5,7 @@ using System.Web;
 
 namespace ScrumPoker.Models
 {
-    public class Rooms : ICrud<Room, string>
+    public class Rooms : IRoomRepository
     {
         private readonly List<Room> _rooms = new List<Room>();
         private readonly IIdGenerator<string> _idGenerator;

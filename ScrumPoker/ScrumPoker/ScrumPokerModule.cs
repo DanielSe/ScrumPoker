@@ -12,7 +12,7 @@ namespace ScrumPoker
         public override void Load()
         {
             Bind<IIdGenerator<string>>().To<IdGenerator>();
-            Bind<ICrud<Room,string>>().To<Rooms>().InSingletonScope();
+            Bind<IRoomRepository>().To<Rooms>().InSingletonScope();
         }
     }
 }

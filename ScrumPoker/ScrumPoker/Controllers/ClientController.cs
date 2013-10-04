@@ -10,7 +10,7 @@ namespace ScrumPoker.Controllers
 {
     public class ClientController : Controller
     {
-        private ICrud<Room, string> _rooms = ScrumPokerKernel.Instance.Get<ICrud<Room, string>>();
+        private ICrud<Room, string> _rooms = ScrumPokerKernel.Instance.Get<IRoomRepository>();
         private IIdGenerator<string> _idGenerator = ScrumPokerKernel.Instance.Get<IIdGenerator<string>>();
 
         //

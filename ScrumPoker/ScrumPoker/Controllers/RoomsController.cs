@@ -15,7 +15,7 @@ namespace ScrumPoker.Controllers
 
         public ActionResult Index()
         {
-            var roomrepo = ScrumPokerKernel.Instance.Get<ICrud<Room, string>>();
+            var roomrepo = ScrumPokerKernel.Instance.Get<IRoomRepository>();
             var rooms = roomrepo.List();
 
             return View(rooms);
@@ -26,7 +26,7 @@ namespace ScrumPoker.Controllers
         // GET: /Rooms/Dashboard/57fhanr
         public ActionResult Dashboard(string id)
         {
-            var roomrepo = ScrumPokerKernel.Instance.Get<ICrud<Room, string>>();
+            var roomrepo = ScrumPokerKernel.Instance.Get<IRoomRepository>();
             var room = roomrepo.Read(id);
 
             return View(room);
@@ -50,7 +50,7 @@ namespace ScrumPoker.Controllers
                     return View(room);
 
                 // TODO: Add insert logic here
-                var rooms = ScrumPokerKernel.Instance.Get<ICrud<Room, string>>();
+                var rooms = ScrumPokerKernel.Instance.Get<IRoomRepository>();
                 var theRoom = rooms.Create(room);
                 
                 return RedirectToAction("Index", "Admin", new { roomId = theRoom.RoomAdminId });
