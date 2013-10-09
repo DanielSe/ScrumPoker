@@ -2,10 +2,12 @@
 using System.Web.Mvc;
 using Ninject;
 using ScrumPoker.Code;
+using ScrumPoker.Hubs;
 using ScrumPoker.Models;
 using System.Linq;
 using System.Linq.Expressions;
 using System;
+using Microsoft.AspNet.SignalR;
 
 namespace ScrumPoker.Controllers
 {
@@ -64,7 +66,11 @@ namespace ScrumPoker.Controllers
                     Name = form["Name"],
                     Email = form["Email"]
                 };
-            
+
+            //GlobalHost.ConnectionManager.GetHubContext<RoomHub>().Clients.All.newParticipant(participant.Name);
+
+            GlobalHost.ConnectionManager.GetHubContext<RoomHub>().Clients.Group(roomId).newParticipant(participant);
+
             Response.AppendCookie(new HttpCookie("ParticipantId", participant.ParticipantId) { Path = "/Client/" + roomId });
 
             room.Participants.Add(participant);

@@ -9,31 +9,14 @@
         <li>@Html.ActionLink("Show client", "Index", "Client", new { roomId = @Model.RoomId }, new { target = "_blank"})</li>
     </ul>
 
-    @if (Model.Participants.Any())
-    {
-        <h2>Participants</h2>
-        <ul>
-            @foreach (var participant in Model.Participants)
-            {
-                <li>
-                    <span>@participant.Name</span>
-                    <span>@participant.Email</span>
-                    @if (string.IsNullOrEmpty(participant.Vote))
-                    {
-                        <span>Has not voted yet</span>
-                    }
-                    else
-                    {
-                        <span>@participant.Vote</span>
-                    }
-                </li>
-            }
-        </ul>
-    }
-    else
-    {
-        <h2>No participants</h2>
-    }
+    <h2>Participants</h2>
+    <ul data-bind="foreach: participants">
+        <li>
+            <span data-bind="text:Name"></span>
+            <span data-bind="text:Email"></span>
+            <span></span>
+        </li>
+    </ul>
     
     <h2>Issues</h2>
     <ul>
@@ -62,3 +45,33 @@
         @Html.ActionLink("Create issue", "CreateIssue")
     </p>
 </div>
+
+@section scripts
+{
+    <script>
+        $(function () {
+            var roomAdminController = new RoomAdminController();
+            
+            var hub = $.connection.roomHub;
+
+            hub.client.newParticipant = function (participant) {
+                roomAdminController.push(participant);
+            };
+
+            hub.client.removeParticipant = function (name) {
+                alert(name + " has left the room.");
+                return;
+            };
+            
+            $.connection.hub.start().done(function() {
+                hub.server.joinRoom("@Model.RoomId", "PID");
+
+                $(window).unload(function () {
+                    hub.server.leaveRoom("@Model.RoomId", "PID");
+                });
+            });
+
+            ko.applyBindings(roomAdminController);
+        });
+    </script>
+}

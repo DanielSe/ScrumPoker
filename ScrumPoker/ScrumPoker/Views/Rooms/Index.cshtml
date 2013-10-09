@@ -17,7 +17,10 @@
             @foreach (var room in Model)
             {
                 <li>
-                    <b>@Html.ActionLink(room.Name, "Index", "Client", new {roomId = @room.RoomId}, new {})</b> - <i>@room.Description</i>
+                    <b>@Html.ActionLink(room.Name, "Index", "Client", new {roomId = @room.RoomId}, new {})</b>
+                    <b>@Html.ActionLink("Admin", "Index", "Admin", new {roomId = @room.RoomAdminId}, new {})</b>
+                    -
+                    <i>@room.Description</i>
                 </li>
             }
         </ul>
