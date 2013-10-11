@@ -22,9 +22,9 @@ namespace ScrumPoker.Controllers
 
         //
         // GET: /Admin/{roomId}
-        public ActionResult Index(string roomId)
+        public ActionResult Index(string roomAdminId)
         {
-            var room = _roomRepository.List().FirstOrDefault(x => x.RoomAdminId == roomId);
+            var room = FindRoomByAdminId(roomAdminId);
 
             if (room == null)
                 return HttpNotFound("Room not found.");
@@ -33,21 +33,20 @@ namespace ScrumPoker.Controllers
         }
 
 
-        public ActionResult CreateIssue(string roomId)
+        public ActionResult CreateIssue(string roomAdminId)
         {
-            return View(new Issue());
+            var room = FindRoomByAdminId(roomAdminId);
+            var issue = new Issue() {Room = room, RoomId = room.RoomId};
+            return View(issue);
         }
 
         [HttpPost]
-        public ActionResult CreateIssue(string roomId, Issue issue)
+        public ActionResult CreateIssue(string roomAdminId, Issue issue)
         {
             try
             {
                 if (!ModelState.IsValid)
                     return View(issue);
-
-                var room = _roomRepository.Read(roomId);
-                issue.Room = room;
 
                 issue = _issueRepository.Create(issue);
 
@@ -59,29 +58,27 @@ namespace ScrumPoker.Controllers
             }
         }
 
-        public ActionResult SetIssue(string roomId)
+        public ActionResult SetIssue(string roomAdminId, string issueId)
         {
-            return View();
+            var room = FindRoomByAdminId(roomAdminId);
+
+            var issue = room.Issues.FirstOrDefault(x => x.IssueId == issueId);
+
+            if (issue == null)
+                throw new Exception("Issue with is " + issueId + " was not found in room " + room.Name + " (" + room.RoomId + ")");
+
+            room.CurrentIssueId = issueId;
+            _roomRepository.Update(room);
+
+            RoomBroadcast.NewIssue(issue);
+
+            return RedirectToAction("Index", new {roomId = roomAdminId});
         }
 
-        [HttpPost]
-        public ActionResult SetIssue(string roomId, FormCollection form)
+
+        private Room FindRoomByAdminId(string roomAdminId)
         {
-            var room = _roomRepository.List().FirstOrDefault(x => x.RoomAdminId == roomId);
-
-            var issue = new Issue()
-                {
-                    IssueId = ScrumPokerKernel.Instance.Get<IIdGenerator<string>>().CreateId(),
-                    Name = form["Name"],
-                    Description = form["Description"]
-                };
-
-            room.CurrentIssue = issue;
-            foreach (var p in room.Participants)
-                p.Vote = null;
-
-            return RedirectToAction("Index", new {roomId});
+            return _roomRepository.List().FirstOrDefault(x => x.RoomAdminId == roomAdminId);
         }
-
     }
 }

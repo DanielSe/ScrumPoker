@@ -18,7 +18,7 @@
             {
                 <li>
                     <b>@Html.ActionLink(room.Name, "Index", "Client", new {roomId = @room.RoomId}, new {})</b>
-                    <b>@Html.ActionLink("Admin", "Index", "Admin", new {roomId = @room.RoomAdminId}, new {})</b>
+                    <b>@Html.ActionLink("Admin", "Index", "Admin", new {roomAdminId = @room.RoomAdminId}, new {})</b>
                     -
                     <i>@room.Description</i>
                 </li>

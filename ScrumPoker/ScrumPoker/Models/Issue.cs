@@ -10,18 +10,21 @@ namespace ScrumPoker.Models
 {
     public class Issue
     {
-        public Issue()
-        {
-        }
-
+        // Primary key
         [DataType(DataType.Text), HiddenInput(DisplayValue = false)]
         public string IssueId { get; set; }
 
         [DataType(DataType.Text)]
         public string Name { get; set; }
+
         [DataType(DataType.MultilineText)]
         public string Description { get; set; }
 
-        public Room Room { get; set; }
+        // Foreign key
+        [DataType(DataType.Text), HiddenInput(DisplayValue = false)]
+        public string RoomId { get; set; }
+
+        // Navigation property
+        public virtual Room Room { get; set; }
     }
 }

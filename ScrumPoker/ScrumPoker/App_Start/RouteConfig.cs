@@ -21,7 +21,7 @@ namespace ScrumPoker
 
             routes.MapRoute(
                 name: "Admin",
-                url: "Admin/{roomId}/{action}",
+                url: "Admin/{roomAdminId}/{action}",
                 defaults: new { controller = "Admin", action = "Index" }
                 );
 

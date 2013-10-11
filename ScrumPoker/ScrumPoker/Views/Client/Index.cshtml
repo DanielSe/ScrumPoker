@@ -7,11 +7,20 @@
 <h2>Room @Model.Room.Name</h2>
 <p>@Model.Room.Description</p>
 
-@if (Model.Room.CurrentIssue != null)
-{
-    <h2>Current Issue: @Model.Room.CurrentIssue.Name</h2>
-    <p>@Model.Room.CurrentIssue.Description</p>
-}
+<div data-bind="if: currentIssue">
+    <h2 data-bind="text: currentIssue().name"></h2>
+    <p data-bind="text: currentIssue().description"></p>
+</div>
+
+<div>
+    <h2>Participants</h2>
+    <ul data-bind="foreach: participants">
+        <li>
+            <span data-bind="text:name"></span>
+            (<span data-bind="text:email"></span>)
+        </li>
+    </ul>
+</div>
 
 
 @if (string.IsNullOrEmpty(Model.Participant.Vote))
@@ -29,4 +38,45 @@
 else
 {
     <h2>You voted @Model.Participant.Vote</h2>
+}
+
+@section scripts
+{
+    <script>
+        $(function () {
+            var controller = new RoomClientController();
+            
+            var hub = $.connection.roomHub;
+
+            hub.client.participantJoins = function (participant) {
+                controller.participants.push(new Participant(participant));
+            };
+
+            hub.client.participantLeaves = function (participantId) {
+                controller.participants.removeAll(function(item) {
+                     return item.participantId() == participantId;
+                });
+            };
+
+            hub.client.newIssue = function(issue) {
+                controller.currentIssue(new Issue(issue));
+            };
+            
+            hub.client.initRoom = function (initData) {
+                initData.participants.forEach(function (item) {
+                    controller.participants.push(new Participant(item));
+                });
+            };
+            
+            $.connection.hub.start().done(function() {
+                hub.server.joinRoom("@Model.Room.RoomId", "PID");
+
+                $(window).unload(function () {
+                    hub.server.leaveRoom("@Model.Room.RoomId", "PID");
+                });
+            });
+
+            ko.applyBindings(controller);
+        });
+    </script>
 }

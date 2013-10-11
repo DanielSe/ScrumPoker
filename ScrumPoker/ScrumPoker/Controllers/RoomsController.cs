@@ -20,7 +20,6 @@ namespace ScrumPoker.Controllers
 
         // Shows a list of all available rooms or allows searching for rooms.
         // GET: /Rooms/
-
         public ActionResult Index()
         {
             var rooms = _roomRepository.List();
@@ -51,7 +50,7 @@ namespace ScrumPoker.Controllers
                 // TODO: Add insert logic here
                 var theRoom = _roomRepository.Create(room);
                 
-                return RedirectToAction("Index", "Admin", new { roomId = theRoom.RoomAdminId });
+                return RedirectToAction("Index", "Admin", new { roomAdminId = theRoom.RoomAdminId });
             }
             catch
             {

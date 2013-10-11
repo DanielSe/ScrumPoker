@@ -1,6 +1,8 @@
-﻿using Ninject;
+﻿using Microsoft.AspNet.SignalR;
+using Ninject;
 using Ninject.Parameters;
 using ScrumPoker.Controllers;
+using ScrumPoker.Hubs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,12 +21,14 @@ namespace ScrumPoker
     {
         protected void Application_Start()
         {
-            ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());
-            AreaRegistration.RegisterAllAreas();
+            GlobalHost.DependencyResolver.Register(typeof(RoomHub), () => ScrumPokerKernel.Instance.Get<RoomHub>());
+            RouteTable.Routes.MapHubs();
 
+            ControllerBuilder.Current.SetControllerFactory(new NinjectControllerFactory());
+
+            AreaRegistration.RegisterAllAreas();
             WebApiConfig.Register(GlobalConfiguration.Configuration);
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
-            RouteTable.Routes.MapHubs();
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
@@ -36,7 +40,7 @@ namespace ScrumPoker
 
         static NinjectControllerFactory()
         {
-            Kernel = new StandardKernel(new ScrumPokerModule());
+            Kernel = ScrumPokerKernel.Instance;
         }
 
         public override IController CreateController(RequestContext requestContext, string controllerName)

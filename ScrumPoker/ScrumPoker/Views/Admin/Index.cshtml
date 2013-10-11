@@ -8,15 +8,21 @@
         <li>@Html.ActionLink("Show dashboard", "Dashboard", "Client", new { id = @Model.RoomId }, new { target = "_blank"})</li>
         <li>@Html.ActionLink("Show client", "Index", "Client", new { roomId = @Model.RoomId }, new { target = "_blank"})</li>
     </ul>
+    
+    <div>
+        <h2>Participants</h2>
+        <ul data-bind="foreach: participants">
+            <li>
+                <span data-bind="text:name"></span>
+                <span data-bind="text:email"></span>
+                <span></span>
+            </li>
+        </ul>
 
-    <h2>Participants</h2>
-    <ul data-bind="foreach: participants">
-        <li>
-            <span data-bind="text:Name"></span>
-            <span data-bind="text:Email"></span>
-            <span></span>
-        </li>
-    </ul>
+        <!-- ko if: participants().length == 0 -->
+        <p>No participants</p>
+        <!-- /ko -->
+    </div>
     
     <h2>Issues</h2>
     <ul>
@@ -24,7 +30,7 @@
         {
             foreach (var issue in Model.Issues)
             {
-                <li>@issue.Name - @issue.Description</li>
+                <li>@issue.Name - @issue.Description - @Html.ActionLink("Set current", "SetIssue", new {issueId = @issue.IssueId})</li>
             }
         }
         else
@@ -41,7 +47,6 @@
         <p>There is no current issue.</p>
     }
     <p>
-        @Html.ActionLink("Set issue", "SetIssue")
         @Html.ActionLink("Create issue", "CreateIssue")
     </p>
 </div>
@@ -54,17 +59,24 @@
             
             var hub = $.connection.roomHub;
 
-            hub.client.newParticipant = function (participant) {
-                roomAdminController.push(participant);
+            hub.client.participantJoins = function (participant) {
+                roomAdminController.participants.push(new Participant(participant));
             };
 
-            hub.client.removeParticipant = function (name) {
-                alert(name + " has left the room.");
-                return;
+            hub.client.participantLeaves = function (participantId) {
+                roomAdminController.participants.removeAll(function(item) {
+                    return item.participantId() == participantId;
+                });
+            };
+
+            hub.client.initRoom = function(initData) {
+                initData.participants.forEach(function(item) {
+                    roomAdminController.participants.push(new Participant(item));
+                });
             };
             
             $.connection.hub.start().done(function() {
-                hub.server.joinRoom("@Model.RoomId", "PID");
+                var test = hub.server.joinRoom("@Model.RoomId", "PID");
 
                 $(window).unload(function () {
                     hub.server.leaveRoom("@Model.RoomId", "PID");
@@ -72,6 +84,7 @@
             });
 
             ko.applyBindings(roomAdminController);
+            window.dsec = roomAdminController;
         });
     </script>
 }

@@ -14,11 +14,14 @@ namespace ScrumPoker.Controllers
     public class ClientController : Controller
     {
         private readonly IRoomRepository _roomRepository;
+        private readonly IParticipantRepository _participantRepository;
+
         private IIdGenerator<string> _idGenerator = ScrumPokerKernel.Instance.Get<IIdGenerator<string>>();
 
-        public ClientController(IRoomRepository roomRepository)
+        public ClientController(IRoomRepository roomRepository, IParticipantRepository participantRepository)
         {
             _roomRepository = roomRepository;
+            _participantRepository = participantRepository;
         }
 
         //
@@ -63,13 +66,12 @@ namespace ScrumPoker.Controllers
             var participant = new Participant
                 {
                     ParticipantId = _idGenerator.CreateId(),
+                    RoomId = roomId,
                     Name = form["Name"],
                     Email = form["Email"]
                 };
 
-            //GlobalHost.ConnectionManager.GetHubContext<RoomHub>().Clients.All.newParticipant(participant.Name);
-
-            GlobalHost.ConnectionManager.GetHubContext<RoomHub>().Clients.Group(roomId).newParticipant(participant);
+            RoomBroadcast.ParticipantJoins(participant);
 
             Response.AppendCookie(new HttpCookie("ParticipantId", participant.ParticipantId) { Path = "/Client/" + roomId });
 

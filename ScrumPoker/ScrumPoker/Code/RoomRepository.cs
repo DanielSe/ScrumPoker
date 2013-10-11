@@ -7,11 +7,12 @@ namespace ScrumPoker.Code
 {
     public class RoomRepository : IRoomRepository
     {
-        private readonly ScrumPokerContext _db = new ScrumPokerContext();
+        private readonly ScrumPokerContext _db;
         private readonly IIdGenerator<string> _idg;
 
-        public RoomRepository(IIdGenerator<string> idg)
+        public RoomRepository(ScrumPokerContext context, IIdGenerator<string> idg)
         {
+            _db = context;
             _idg = idg;
         }
 

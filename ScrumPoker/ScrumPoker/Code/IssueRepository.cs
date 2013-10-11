@@ -11,8 +11,9 @@ namespace ScrumPoker.Code
         private readonly ScrumPokerContext _db = new ScrumPokerContext();
         private readonly IIdGenerator<string> _idg;
 
-        public IssueRepository(IIdGenerator<string> idg)
+        public IssueRepository(ScrumPokerContext context, IIdGenerator<string> idg)
         {
+            _db = context;
             _idg = idg;
         }
 

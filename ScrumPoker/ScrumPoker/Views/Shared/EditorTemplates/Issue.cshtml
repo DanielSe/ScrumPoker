@@ -1,6 +1,7 @@
 ﻿@model ScrumPoker.Models.Issue
 
 <div>
+    @Html.HiddenFor(x => x.RoomId)
     @Html.HiddenFor(x => x.IssueId)
     
     @Html.EditorFor(x => x.Name, "String")
