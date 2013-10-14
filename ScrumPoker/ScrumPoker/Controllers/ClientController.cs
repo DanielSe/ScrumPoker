@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System.IO;
+using System.Web;
 using System.Web.Mvc;
 using Ninject;
 using ScrumPoker.Code;
@@ -8,6 +9,9 @@ using System.Linq;
 using System.Linq.Expressions;
 using System;
 using Microsoft.AspNet.SignalR;
+using ZXing;
+using ZXing.Common;
+using System.Drawing.Imaging;
 
 namespace ScrumPoker.Controllers
 {
@@ -25,7 +29,7 @@ namespace ScrumPoker.Controllers
         }
 
         //
-        // GET: /Client/
+        // GET: /Client/{roomId}
         public ActionResult Index(string roomId)
         {
             var participantCookie = Request.Cookies["ParticipantId"];
@@ -48,7 +52,7 @@ namespace ScrumPoker.Controllers
         }
 
         //
-        //
+        // GET: /Client/{roomId}/Join
         public ActionResult Join(string roomId)
         {
             var room = _roomRepository.Read(roomId);
@@ -57,7 +61,7 @@ namespace ScrumPoker.Controllers
         }
 
         //
-        //
+        // POST: /Client/{roomId}/Join
         [HttpPost]
         public ActionResult Join(string roomId, FormCollection form)
         {
@@ -95,6 +99,35 @@ namespace ScrumPoker.Controllers
             participant.Vote = vote;
 
             return RedirectToAction("Index");
+        }
+
+
+
+        [HttpGet]
+        public ActionResult QrImage(string roomId)
+        {
+            var room = _roomRepository.Read(roomId);
+
+            if (room == null)
+                return HttpNotFound();
+
+            var writer = new BarcodeWriter
+                {
+                    Format = BarcodeFormat.QR_CODE,
+                    Options = new EncodingOptions()
+                        {
+                            Width = 400,
+                            Height = 400
+                        },
+                };
+
+            var baseUrl = Request.Url.GetLeftPart(UriPartial.Authority);
+            var url = Url.Action("Index", "Client", new {roomId});
+            var bitmap = writer.Write(baseUrl + url);
+            var ms = new MemoryStream();
+            bitmap.Save(ms, ImageFormat.Png);
+
+            return File(ms.ToArray(), "image/png");
         }
 
 
