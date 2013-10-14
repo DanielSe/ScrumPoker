@@ -1,5 +1,28 @@
 ﻿function RoomAdminController() {
+    this.roomId = ko.observable();
+    this.roomAdminId = ko.observable();
     this.participants = ko.observableArray();
+
+    this.addParticipant = function (participant) {
+        var self = this;
+        
+        participant.kick = function() {
+            var rid = self.roomAdminId();
+            var pid = this.participantId();
+
+            $.getJSON("/api/admin/" + rid + "/kickparticipant?participantId=" + pid).done(function(data) {
+                if (data == "OK") {
+                    self.removeParticipant(pid);
+                }
+            });
+        };
+
+        this.participants.push(participant);
+    };
+
+    this.removeParticipant = function(participantId) {
+        this.participants.removeAll(function(item) { return item.participantId == participantId; });
+    };
 }
 
 function RoomClientController() {

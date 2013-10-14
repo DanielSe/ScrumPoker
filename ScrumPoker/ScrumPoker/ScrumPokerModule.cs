@@ -3,6 +3,7 @@ using Ninject.Modules;
 using ScrumPoker.Code;
 using ScrumPoker.Models;
 using ScrumPoker.Hubs;
+using ScrumPoker.ApiControllers;
 
 namespace ScrumPoker
 {
@@ -21,7 +22,11 @@ namespace ScrumPoker
             Bind<IIssueRepository>().To<IssueRepository>().InSingletonScope();
             Bind<IParticipantRepository>().To<ParticipantRepository>().InSingletonScope();
 
+            // HUB Bindings
             Bind<RoomHub>().ToSelf();
+
+            // WebAPI Bindings
+            Bind<ParticipantController>().ToSelf();
         }
     }
 }

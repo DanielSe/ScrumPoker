@@ -32,14 +32,19 @@ namespace ScrumPoker.Controllers
         // GET: /Client/{roomId}
         public ActionResult Index(string roomId)
         {
-            var participantCookie = Request.Cookies["ParticipantId"];
-            
-            if (participantCookie == null)
-                return RedirectToAction("Join", new {roomId});
-
             var room = _roomRepository.Read(roomId);
+            if (room == null)
+                return HttpNotFound();
 
-            return View(new IndexViewModel { Room = room, Participant = GetParticipant(roomId) });
+            var participant = GetParticipant();
+
+            if (participant == null)
+            {
+                Response.Cookies.Remove("ParticipantId");
+                return RedirectToAction("Join", new { roomId });
+            }
+
+            return View(new IndexViewModel { Room = room, Participant = participant });
         }
 
         // Shows the dashboard from a room, opened through a link on the admin page of the room
@@ -71,15 +76,15 @@ namespace ScrumPoker.Controllers
                 {
                     ParticipantId = _idGenerator.CreateId(),
                     RoomId = roomId,
+                    Room = room,
                     Name = form["Name"],
                     Email = form["Email"]
                 };
 
+            _participantRepository.Create(participant);
+
             RoomBroadcast.ParticipantJoins(participant);
-
             Response.AppendCookie(new HttpCookie("ParticipantId", participant.ParticipantId) { Path = "/Client/" + roomId });
-
-            room.Participants.Add(participant);
 
             return RedirectToAction("Index", new { roomId });
         }
@@ -95,7 +100,7 @@ namespace ScrumPoker.Controllers
         //
         public ActionResult Vote(string roomId, string vote)
         {
-            var participant = GetParticipant(roomId);
+            var participant = GetParticipant();
             participant.Vote = vote;
 
             return RedirectToAction("Index");
@@ -138,7 +143,7 @@ namespace ScrumPoker.Controllers
 
 
 
-        private Participant GetParticipant(string roomId)
+        private Participant GetParticipant()
         {
             var cookie = Request.Cookies["ParticipantId"];
             if (cookie == null)
@@ -148,11 +153,7 @@ namespace ScrumPoker.Controllers
             if (string.IsNullOrEmpty(pid))
                 return null;
 
-            var room = _roomRepository.Read(roomId);
-            if (room == null)
-                return null;
-
-            var participant = room.Participants.FirstOrDefault(x => x.ParticipantId == pid);
+            var participant = _participantRepository.Read(pid);
             return participant;
         }
 

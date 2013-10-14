@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using ScrumPoker.Models;
 
 namespace ScrumPoker.Code
@@ -21,6 +23,11 @@ namespace ScrumPoker.Code
                 entity.ParticipantId = _idGenerator.CreateId();
 
             var r = _db.Participants.Add(entity);
+            if (r.Room != null)
+            {
+                r.Room.Participants.Add(r);
+            }
+
             _db.SaveChanges();
 
             return r;
@@ -28,22 +35,27 @@ namespace ScrumPoker.Code
 
         public Participant Read(string key)
         {
-            throw new NotImplementedException();
+            return _db.Participants.Find(key);
         }
 
         public Participant Update(Participant entity)
         {
-            throw new NotImplementedException();
+            _db.Entry(entity).State = EntityState.Modified;
+            _db.SaveChanges();
+
+            return entity;
         }
 
         public void Delete(Participant entity)
         {
-            throw new NotImplementedException();
+            entity.Room.Participants.Remove(entity);
+            _db.Participants.Remove(entity);
+            _db.SaveChanges();
         }
 
         public IEnumerable<Participant> List()
         {
-            throw new NotImplementedException();
+            return _db.Participants.ToList();
         }
     }
 }

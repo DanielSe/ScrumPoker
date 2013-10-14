@@ -52,5 +52,10 @@ namespace ScrumPoker.Code
         {
             return _db.Rooms.AsEnumerable();
         }
+
+        public Room ReadByAdminId(string adminId)
+        {
+            return _db.Rooms.SingleOrDefault(x => x.RoomAdminId == adminId);
+        }
     }
 }

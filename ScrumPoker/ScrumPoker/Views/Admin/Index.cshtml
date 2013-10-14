@@ -13,9 +13,11 @@
         <h2>Participants</h2>
         <ul data-bind="foreach: participants">
             <li>
-                <span data-bind="text:name"></span>
-                <span data-bind="text:email"></span>
+                <span data-bind="text: participantId"></span>
+                <span data-bind="text: name"></span>
+                <span data-bind="text: email"></span>
                 <span></span>
+                <a href="#" data-bind="click: kick">Kick</a>
             </li>
         </ul>
 
@@ -56,22 +58,22 @@
     <script>
         $(function () {
             var roomAdminController = new RoomAdminController();
+            roomAdminController.roomAdminId("@Model.RoomAdminId");
+            roomAdminController.roomId("@Model.RoomId");
             
             var hub = $.connection.roomHub;
 
             hub.client.participantJoins = function (participant) {
-                roomAdminController.participants.push(new Participant(participant));
+                roomAdminController.addParticipant(new Participant(participant));
             };
 
             hub.client.participantLeaves = function (participantId) {
-                roomAdminController.participants.removeAll(function(item) {
-                    return item.participantId() == participantId;
-                });
+                roomAdminController.removeParticipant(participantId);
             };
 
             hub.client.initRoom = function(initData) {
                 initData.participants.forEach(function(item) {
-                    roomAdminController.participants.push(new Participant(item));
+                    roomAdminController.addParticipant(new Participant(item));
                 });
             };
             
