@@ -78,7 +78,7 @@ namespace ScrumPoker.Controllers
 
         private Room FindRoomByAdminId(string roomAdminId)
         {
-            return _roomRepository.List().FirstOrDefault(x => x.RoomAdminId == roomAdminId);
+            return _roomRepository.ReadByAdminId(roomAdminId);
         }
     }
 }

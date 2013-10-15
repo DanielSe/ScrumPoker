@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Data;
+using System.Data.Entity.Infrastructure;
 using System.Linq;
 using ScrumPoker.Models;
 
@@ -37,9 +38,11 @@ namespace ScrumPoker.Code
 
         public Room Update(Room entity)
         {
-            _db.Entry(entity).State = EntityState.Modified;
+            var r = _db.Rooms.Find(entity.RoomId);
+            _db.Entry(r).CurrentValues.SetValues(entity);
             _db.SaveChanges();
-            return entity;
+
+            return r;
         }
 
         public void Delete(Room entity)

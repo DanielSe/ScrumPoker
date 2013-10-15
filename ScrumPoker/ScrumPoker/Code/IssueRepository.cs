@@ -35,7 +35,8 @@ namespace ScrumPoker.Code
 
         public Issue Update(Issue entity)
         {
-            _db.Entry(entity).State = EntityState.Modified;
+            var i = _db.Issues.Find(entity.IssueId);
+            _db.Entry(i).CurrentValues.SetValues(entity);
             _db.SaveChanges();
 
             return entity;

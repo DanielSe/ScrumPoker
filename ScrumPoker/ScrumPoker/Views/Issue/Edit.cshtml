@@ -1,0 +1,26 @@
+﻿@model ScrumPoker.Models.Issue
+
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+
+<div class="container">
+    <h1>Edit @Model.Name</h1>
+    
+    <p>
+        @Html.ValidationSummary()
+        @Html.ValidationMessage("Error")
+    </p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.EditorForModel()
+
+        <div class="form-group">
+            <input type="submit" value="Save" class="btn btn-default" />
+            @Html.ActionLink("Delete", "Delete", new { id = @Model.IssueId }, new { @class = "btn btn-warning"})
+        </div>
+    }
+</div>

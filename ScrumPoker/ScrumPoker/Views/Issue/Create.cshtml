@@ -1,6 +1,12 @@
-﻿@model ScrumPoker.Models.Issue
+﻿@{
+    ViewBag.Title = "Create";
+}
+
+@model ScrumPoker.Models.Issue
 
 <div class="container">
+    <h1>Create a new Issue for room @Model.Room.Name</h1>
+    
     @using (Html.BeginForm())
     {
         @Html.EditorForModel()
