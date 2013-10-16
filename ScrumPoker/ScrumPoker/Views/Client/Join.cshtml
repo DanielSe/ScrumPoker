@@ -1,25 +1,22 @@
-﻿@model ScrumPoker.Models.Room
+﻿@model ScrumPoker.Models.Participant
 
 @{
-    ViewBag.Title = "Join";
+    ViewBag.Title = "Join Room";
 }
 
-<h2>Join Room @Model.Name</h2>
+<div class="container">
+    <h2>Join Room @Model.Room.Name</h2>
 
-@using (Html.BeginForm())
-{
-    <div>
-        @Html.Label("Name")
-        @Html.TextBox("Name")
-    </div>
+    @using (Html.BeginForm())
+    {
+        @Html.HiddenFor(x => x.RoomId)
 
-    <div>
-        @Html.Label("Email")
-        @Html.TextBox("Email")
-    </div>
+        @Html.EditorFor(x => x.Name, "String")
+        @Html.EditorFor(x => x.Email, "String")
 
-    <div>
-        <input type="submit" value="Join" />
-    </div>
-}
-
+        <div class="form-group">
+            <input type="submit" value="Join room" class="btn btn-primary" />
+            @Html.ActionLink("Cancel", "Index", "Rooms", new {}, new { @class="btn btn-default"})
+        </div>
+    }
+</div>

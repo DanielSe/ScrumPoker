@@ -29,10 +29,10 @@ namespace ScrumPoker.Controllers
         }
 
         //
-        // GET: /Client/{roomId}
-        public ActionResult Index(string roomId)
+        // GET: /Client/{id}
+        public ActionResult Index(string id)
         {
-            var room = _roomRepository.Read(roomId);
+            var room = _roomRepository.Read(id);
             if (room == null)
                 return HttpNotFound();
 
@@ -41,103 +41,81 @@ namespace ScrumPoker.Controllers
             if (participant == null)
             {
                 Response.Cookies.Remove("ParticipantId");
-                return RedirectToAction("Join", new { roomId });
+                return RedirectToAction("Join", new { id });
             }
 
             return View(new IndexViewModel { Room = room, Participant = participant });
         }
 
-        // Shows the dashboard from a room, opened through a link on the admin page of the room
-        // GET: /Rooms/Dashboard/57fhanr
-        public ActionResult Dashboard(string id)
-        {
-            var room = _roomRepository.Read(id);
-
-            return View(room);
-        }
+        
 
         //
         // GET: /Client/{roomId}/Join
-        public ActionResult Join(string roomId)
+        public ActionResult Join(string id)
         {
-            var room = _roomRepository.Read(roomId);
+            var room = _roomRepository.Read(id);
 
-            return View(room);
+            if (room == null)
+                return HttpNotFound();
+
+            var participant = new Participant
+                {
+                    Room = room,
+                    RoomId = room.RoomId
+                };
+
+            return View(participant);
         }
 
         //
         // POST: /Client/{roomId}/Join
         [HttpPost]
-        public ActionResult Join(string roomId, FormCollection form)
+        public ActionResult Join(string id, Participant participant)
         {
-            var room = _roomRepository.Read(roomId);
+            var room = _roomRepository.Read(id);
 
-            var participant = new Participant
-                {
-                    ParticipantId = _idGenerator.CreateId(),
-                    RoomId = roomId,
-                    Room = room,
-                    Name = form["Name"],
-                    Email = form["Email"]
-                };
+            if (room == null)
+                return HttpNotFound();
 
-            _participantRepository.Create(participant);
+            if (!ModelState.IsValid)
+                return View(participant);
 
-            RoomBroadcast.ParticipantJoins(participant);
-            Response.AppendCookie(new HttpCookie("ParticipantId", participant.ParticipantId) { Path = "/Client/" + roomId });
+            try
+            {
+                participant.Room = room;
+                participant.ParticipantId = _idGenerator.CreateId();
 
-            return RedirectToAction("Index", new { roomId });
+                _participantRepository.Create(participant);
+
+                RoomBroadcast.ParticipantJoins(participant);
+                Response.AppendCookie(new HttpCookie("ParticipantId", participant.ParticipantId) {Path = "/Client/" + id});
+
+                return RedirectToAction("Index", new { id = room.RoomId });
+            }
+            catch (Exception e)
+            {
+                ModelState.AddModelError("Error", e);
+                return View(participant);
+            }
         }
 
         //
         //
-        public ActionResult Leave(string roomId)
+        public ActionResult Leave(string id)
         {
+            // TODO
             return RedirectToAction("Index", "Rooms");
         }
 
         //
         //
-        public ActionResult Vote(string roomId, string vote)
+        public ActionResult Vote(string id, string vote)
         {
             var participant = GetParticipant();
             participant.Vote = vote;
 
             return RedirectToAction("Index");
         }
-
-
-
-        [HttpGet]
-        public ActionResult QrImage(string roomId)
-        {
-            var room = _roomRepository.Read(roomId);
-
-            if (room == null)
-                return HttpNotFound();
-
-            var writer = new BarcodeWriter
-                {
-                    Format = BarcodeFormat.QR_CODE,
-                    Options = new EncodingOptions()
-                        {
-                            Width = 400,
-                            Height = 400
-                        },
-                };
-
-            var baseUrl = Request.Url.GetLeftPart(UriPartial.Authority);
-            var url = Url.Action("Index", "Client", new {roomId});
-            var bitmap = writer.Write(baseUrl + url);
-            var ms = new MemoryStream();
-            bitmap.Save(ms, ImageFormat.Png);
-
-            return File(ms.ToArray(), "image/png");
-        }
-
-
-
-
 
 
 

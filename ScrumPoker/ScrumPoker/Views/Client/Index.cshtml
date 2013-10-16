@@ -4,41 +4,43 @@
     ViewBag.Title = "Index";
 }
 
-<h2>Room @Model.Room.Name</h2>
-<p>@Model.Room.Description</p>
+<div class="container">
+    <h2>Room @Model.Room.Name</h2>
+    <p>@Model.Room.Description</p>
 
-<div data-bind="if: currentIssue">
-    <h2 data-bind="text: currentIssue().name"></h2>
-    <p data-bind="text: currentIssue().description"></p>
-</div>
+    <div data-bind="if: currentIssue">
+        <h2 data-bind="text: currentIssue().name"></h2>
+        <p data-bind="text: currentIssue().description"></p>
+    </div>
 
-<div>
-    <h2>Participants</h2>
-    <ul data-bind="foreach: participants">
-        <li>
-            <span data-bind="text:name"></span>
-            (<span data-bind="text:email"></span>)
-        </li>
-    </ul>
-</div>
-
-
-@if (string.IsNullOrEmpty(Model.Participant.Vote))
-{
-    <h2>Vote</h2>
-    <ul>
-        @foreach (var size in @Model.Room.VoteSizes)
-        {
+    <div>
+        <h2>Participants</h2>
+        <ul data-bind="foreach: participants">
             <li>
-                @Html.ActionLink(size, "Vote", new {vote = size})
+                <span data-bind="text:name"></span>
+                (<span data-bind="text:email"></span>)
             </li>
-        }
-    </ul>
-}
-else
-{
-    <h2>You voted @Model.Participant.Vote</h2>
-}
+        </ul>
+    </div>
+
+
+    @if (string.IsNullOrEmpty(Model.Participant.Vote))
+    {
+        <h2>Vote</h2>
+        <ul>
+            @foreach (var size in @Model.Room.VoteSizes)
+            {
+                <li>
+                    @Html.ActionLink(size, "Vote", new {vote = size})
+                </li>
+            }
+        </ul>
+    }
+    else
+    {
+        <h2>You voted @Model.Participant.Vote</h2>
+    }
+</div>
 
 @section scripts
 {

@@ -15,7 +15,7 @@ namespace ScrumPoker
 
             routes.MapRoute(
                 name: "Client",
-                url: "Client/{roomId}/{action}",
+                url: "Client/{id}/{action}",
                 defaults: new { controller = "Client", action = "Index" }
                 );
 
@@ -23,6 +23,12 @@ namespace ScrumPoker
                 name: "Admin",
                 url: "Admin/{roomAdminId}/{action}",
                 defaults: new { controller = "Admin", action = "Index" }
+                );
+
+            routes.MapRoute(
+                name: "Dashboard",
+                url: "Dashboard/{id}/{action}",
+                defaults: new { controller = "Dashboard", action = "Index" }
                 );
 
             routes.MapRoute(

@@ -5,8 +5,8 @@
     <p>@Model.Description</p>
 
     <ul>
-        <li>@Html.ActionLink("Show dashboard", "Dashboard", "Client", new { id = @Model.RoomId }, new { target = "_blank"})</li>
-        <li>@Html.ActionLink("Show client", "Index", "Client", new { roomId = @Model.RoomId }, new { target = "_blank"})</li>
+        <li>@Html.ActionLink("Show dashboard", "Index", "Dashboard", new { id = @Model.RoomId }, new { target = "_blank"})</li>
+        <li>@Html.ActionLink("Show client", "Index", "Client", new { id = @Model.RoomId }, new { target = "_blank"})</li>
     </ul>
     
     <div>

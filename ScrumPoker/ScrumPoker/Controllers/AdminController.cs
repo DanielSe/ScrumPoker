@@ -33,31 +33,6 @@ namespace ScrumPoker.Controllers
         }
 
 
-        public ActionResult CreateIssue(string roomAdminId)
-        {
-            var room = FindRoomByAdminId(roomAdminId);
-            var issue = new Issue() {Room = room, RoomId = room.RoomId};
-            return View(issue);
-        }
-
-        [HttpPost]
-        public ActionResult CreateIssue(string roomAdminId, Issue issue)
-        {
-            try
-            {
-                if (!ModelState.IsValid)
-                    return View(issue);
-
-                issue = _issueRepository.Create(issue);
-
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                return View(issue);
-            }
-        }
-
         public ActionResult SetIssue(string roomAdminId, string issueId)
         {
             var room = FindRoomByAdminId(roomAdminId);
